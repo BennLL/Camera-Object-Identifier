@@ -3,9 +3,14 @@ let CANVAS = null;
 let CONTEXT = null;
 let SCALER = 1.0;
 let SIZE = { x: 0, y: 0, width: 0, height: 0 };
+let detector = null;
+let timer = 0;
 
 function main() {
     console.log("Testing...");
+
+    detector = ml5.objectDetector('cocossd', detectOn);
+
     CANVAS = document.getElementById("canvas");
     CONTEXT = CANVAS.getContext("2d");
     CANVAS.width = window.innerWidth;
@@ -28,6 +33,7 @@ function main() {
             VIDEO.onloadeddata = function () {
                 handleReseize();
                 window.addEventListener("resize", handleReseize);
+                // detectObjects();
                 updateCanvas();
             };
         })
@@ -55,4 +61,29 @@ function handleReseize() {
 function updateCanvas() {
     CONTEXT.drawImage(VIDEO, SIZE.x, SIZE.y, SIZE.width, SIZE.height);
     window.requestAnimationFrame(updateCanvas);
+}
+
+function detectOn(){
+    detectObjects();
+}
+
+function detectObjects(){
+    let currentTime = Date.now();
+    let timePassed = currentTime - timer;
+    if(timePassed >= 5000){
+        timer = currentTime;
+        detector.detect(CANVAS, loadResult);
+    }else{
+        let timeLeft = 5000 - timePassed;
+        setTimeout(detectObjects,timeLeft);
+    }
+}
+
+function loadResult(error, results){
+    if(error){
+        console.error(error);
+        return;
+    }
+    console.log(results);
+    detectObjects();
 }
