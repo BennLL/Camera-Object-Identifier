@@ -1,7 +1,7 @@
 let VIDEO = null;
 let CANVAS = null;
 let CONTEXT = null;
-let SCALER = 1.0;
+let SCALER = 0.8;
 let SIZE = { x: 0, y: 0, width: 0, height: 0 };
 let detector = null;
 let timer = 0;
@@ -59,7 +59,7 @@ function handleReseize() {
 }
 
 function updateCanvas() {
-    CONTEXT.drawImage(VIDEO, SIZE.x, SIZE.y, SIZE.width, SIZE.height);
+    //CONTEXT.drawImage(VIDEO, SIZE.x, SIZE.y, SIZE.width, SIZE.height);
     window.requestAnimationFrame(updateCanvas);
 }
 
@@ -70,11 +70,11 @@ function detectOn(){
 function detectObjects(){
     let currentTime = Date.now();
     let timePassed = currentTime - timer;
-    if(timePassed >= 5000){
+    if(timePassed >= 100){
         timer = currentTime;
         detector.detect(CANVAS, loadResult);
     }else{
-        let timeLeft = 5000 - timePassed;
+        let timeLeft = 100 - timePassed;
         setTimeout(detectObjects,timeLeft);
     }
 }
@@ -84,6 +84,34 @@ function loadResult(error, results){
         console.error(error);
         return;
     }
-    console.log(results);
+    CONTEXT.clearRect(0, 0, CANVAS.width, CANVAS.height);
+    drawBox(results);
     detectObjects();
+}
+
+function drawBox(results){
+    console.log(results);
+    CONTEXT.clearRect(0, 0, CANVAS.width, CANVAS.height);
+    CONTEXT.drawImage(VIDEO, SIZE.x, SIZE.y, SIZE.width, SIZE.height);
+
+    for(i = 0; i < results.length; i++){
+        item = results[i];
+        CONTEXT.strokeStyle = 'red'
+        CONTEXT.lineWidth = 4;
+
+        X = SIZE.x + (item.x * SIZE.width) / VIDEO.videoWidth;
+        Y = SIZE.y + (item.y * SIZE.height) / VIDEO.videoHeight;
+        W = (item.width * SIZE.width) / VIDEO.videoWidth;
+        H = (item.height * SIZE.height) / VIDEO.videoHeight;
+
+        CONTEXT.beginPath();
+        CONTEXT.rect(X, Y, W, H);
+        CONTEXT.stroke();
+
+        CONTEXT.fillStyle = 'red';
+        CONTEXT.font = "bold 24px sans-serif";
+        CONTEXT.fillText(item.label, X + 30, Y - 5);
+    }
+
+
 }
