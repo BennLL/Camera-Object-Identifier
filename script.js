@@ -5,6 +5,10 @@ let SCALER = 1.0;
 let SIZE = { x: 0, y: 0, width: 0, height: 0 };
 let detector = null;
 let timer = 0;
+let alertStatus = false;
+
+// change the time to change the fps of the camera
+let frame = 5000;
 
 function main() {
   console.log("Testing...");
@@ -69,11 +73,12 @@ function detectOn() {
 function detectObjects() {
   let currentTime = Date.now();
   let timePassed = currentTime - timer;
-  if (timePassed >= 100) {
+
+  if (timePassed >= frame) {
     timer = currentTime;
     detector.detect(CANVAS, loadResult);
   } else {
-    let timeLeft = 100 - timePassed;
+    let timeLeft = frame - timePassed;
     setTimeout(detectObjects, timeLeft);
   }
 }
@@ -109,5 +114,42 @@ function drawBox(results) {
       CONTEXT.font = "bold 24px sans-serif";
       CONTEXT.fillText(item.label, item.x + 32, item.y - 5);
     }
+  }
+}
+
+function alert() {
+  alertStatus = !alertStatus;
+  console.log("Armed: ", alertStatus);
+  if (alertStatus == true) {
+    screenshot();
+  }
+}
+
+function screenshot() {
+  console.log("Snap!");
+  if (alertStatus) {
+    html2canvas(document.body, { willReadFrequently: true }).then(function (canvas) {
+      const base64image = canvas.toDataURL("image/png");
+      date = new Date();
+      fileName =
+        "IMAGE_" +
+        date.getFullYear() +
+        "-" +
+        (date.getMonth() + 1) +
+        "-" +
+        date.getDate() +
+        "_" +
+        date.getHours() +
+        "-" +
+        date.getMinutes() +
+        "-" +
+        date.getSeconds() +
+        ".png";
+      link = document.createElement("a");
+      link.href = base64image;
+      link.download = fileName;
+      link.click();
+    });
+    setTimeout(screenshot, frame);
   }
 }
