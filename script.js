@@ -8,7 +8,11 @@ let timer = 0;
 let alertStatus = false;
 
 // change the time to change the fps of the camera
-let frame = 5000;
+let frame = 100;
+// change the time to change the interval of recording
+let recordTiming = 5000;
+
+let ITEMS = [];
 
 function main() {
   console.log("Testing...");
@@ -89,18 +93,19 @@ function loadResult(error, results) {
     return;
   }
   CONTEXT.clearRect(0, 0, CANVAS.width, CANVAS.height);
-  drawBox(results);
+  ITEMS = results;
+  console.log(ITEMS);
+  drawBox();
   detectObjects();
 }
 
-function drawBox(results) {
-  console.log(results);
+function drawBox() {
   CONTEXT.clearRect(0, 0, CANVAS.width, CANVAS.height);
   // console.log("Canvas Dimensions: ", CANVAS.width, CANVAS.height);
   CONTEXT.drawImage(VIDEO, SIZE.x, SIZE.y, SIZE.width, SIZE.height);
 
-  for (i = 0; i < results.length; i++) {
-    item = results[i];
+  for (i = 0; i < ITEMS.length; i++) {
+    item = ITEMS[i];
     if (item.confidence > 0.5) {
       CONTEXT.strokeStyle = "red";
       CONTEXT.lineWidth = 4;
@@ -121,13 +126,17 @@ function alert() {
   alertStatus = !alertStatus;
   console.log("Armed: ", alertStatus);
   if (alertStatus == true) {
-    screenshot();
+    record();
   }
 }
 
-function screenshot() {
-  console.log("Snap!");
-  if (alertStatus) {
+function hashuman(){
+  return ITEMS.some(item => item.label === "person");
+}
+
+function record() {
+  if (alertStatus && hashuman() == true) {
+    console.log("Snap!");
     html2canvas(document.body, { willReadFrequently: true }).then(function (canvas) {
       const base64image = canvas.toDataURL("image/png");
       date = new Date();
@@ -150,6 +159,6 @@ function screenshot() {
       link.download = fileName;
       link.click();
     });
-    setTimeout(screenshot, frame);
+    setInterval(record, recordTiming);
   }
 }
