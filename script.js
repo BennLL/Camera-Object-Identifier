@@ -166,45 +166,47 @@ function hashuman() {
 // }
 
 function record() {
-    if (alertStatus && hashuman() == true) {
-        parts = [];
-        mediaRecorder = new MediaRecorder(VIDEO.srcObject);
-        mediaRecorder.ondataavailable = function (e) {
-            parts.push(e.data);
-        };
+    if (alertStatus) {
+        if (hashuman() == true) {
+            parts = [];
+            mediaRecorder = new MediaRecorder(VIDEO.srcObject);
+            mediaRecorder.ondataavailable = function (e) {
+                parts.push(e.data);
+            };
 
-        mediaRecorder.start();
+            mediaRecorder.start();
 
-        setTimeout(function () {
-            mediaRecorder.stop();
-        }, 5000);
+            setTimeout(function () {
+                mediaRecorder.stop();
+            }, 5000);
 
-        mediaRecorder.onstop = function () {
-            const blob = new Blob(parts, {
-                type: "video/webm",
-            });
+            mediaRecorder.onstop = function () {
+                const blob = new Blob(parts, {
+                    type: "video/webm",
+                });
 
-            date = new Date();
-            fileName =
-                "RECORDING_" +
-                date.getFullYear() +
-                "-" +
-                (date.getMonth() + 1) +
-                "-" +
-                date.getDate() +
-                "_" +
-                date.getHours() +
-                "-" +
-                date.getMinutes() +
-                "-" +
-                date.getSeconds() +
-                ".webm";
+                date = new Date();
+                fileName =
+                    "RECORDING_" +
+                    date.getFullYear() +
+                    "-" +
+                    (date.getMonth() + 1) +
+                    "-" +
+                    date.getDate() +
+                    "_" +
+                    date.getHours() +
+                    "-" +
+                    date.getMinutes() +
+                    "-" +
+                    date.getSeconds() +
+                    ".webm";
 
-            url = URL.createObjectURL(blob);
-            link = document.createElement("a");
-            link.href = url;
-            link.download = fileName;
-            link.click();
-        };
+                url = URL.createObjectURL(blob);
+                link = document.createElement("a");
+                link.href = url;
+                link.download = fileName;
+                link.click();
+            };
+        }
     }
 }

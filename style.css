@@ -1,9 +1,21 @@
-body{
+body {
     margin: 0;
     overflow: hidden;
     background-color: black;
 }
 
-#canvas{
+.button {
+    position: relative;
+}
 
+.button-clicked {
+    background-color: blue;
+    color: white;
+}
+
+.button>button {
+    position: absolute;
+    width: 200px;
+    height: 100px;
+    font-size: 40px;
 }
