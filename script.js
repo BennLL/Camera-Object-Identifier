@@ -10,7 +10,7 @@ let alertStatus = false;
 // change the time to change the fps of the camera
 let frame = 100;
 // change the time to change the interval of recording
-let recordTiming = 5000;
+let recordTiming = 15000;
 
 let ITEMS = [];
 
@@ -128,7 +128,16 @@ function alert() {
     alertStatus = !alertStatus;
     console.log("Armed: ", alertStatus);
     if (alertStatus == true) {
-        record();
+        recordLoop();
+    }
+}
+
+function recordLoop() {
+    if (alertStatus == true) {
+        if (hashuman()) {
+            record();
+        }
+        setTimeout(recordLoop, recordTiming);
     }
 }
 
@@ -136,77 +145,45 @@ function hashuman() {
     return ITEMS.some((item) => item.label === "person");
 }
 
-// function record() {
-//   if (alertStatus && hashuman() == true) {
-//     console.log("Snap!");
-//     html2canvas(document.body, { willReadFrequently: true }).then(function (canvas) {
-//       const base64image = canvas.toDataURL("image/png");
-//       date = new Date();
-//       fileName =
-//         "IMAGE_" +
-//         date.getFullYear() +
-//         "-" +
-//         (date.getMonth() + 1) +
-//         "-" +
-//         date.getDate() +
-//         "_" +
-//         date.getHours() +
-//         "-" +
-//         date.getMinutes() +
-//         "-" +
-//         date.getSeconds() +
-//         ".png";
-//       link = document.createElement("a");
-//       link.href = base64image;
-//       link.download = fileName;
-//       link.click();
-//     });
-//     setInterval(record, recordTiming);
-//   }
-// }
-
 function record() {
-    if (alertStatus) {
-        if (hashuman() == true) {
-            parts = [];
-            mediaRecorder = new MediaRecorder(VIDEO.srcObject);
-            mediaRecorder.ondataavailable = function (e) {
-                parts.push(e.data);
-            };
 
-            mediaRecorder.start();
+    parts = [];
+    mediaRecorder = new MediaRecorder(VIDEO.srcObject);
+    mediaRecorder.ondataavailable = function (e) {
+        parts.push(e.data);
+    };
 
-            setTimeout(function () {
-                mediaRecorder.stop();
-            }, 5000);
+    mediaRecorder.start();
 
-            mediaRecorder.onstop = function () {
-                const blob = new Blob(parts, {
-                    type: "video/webm",
-                });
+    setTimeout(function () {
+        mediaRecorder.stop();
+    }, recordTiming);
 
-                date = new Date();
-                fileName =
-                    "RECORDING_" +
-                    date.getFullYear() +
-                    "-" +
-                    (date.getMonth() + 1) +
-                    "-" +
-                    date.getDate() +
-                    "_" +
-                    date.getHours() +
-                    "-" +
-                    date.getMinutes() +
-                    "-" +
-                    date.getSeconds() +
-                    ".webm";
+    mediaRecorder.onstop = function () {
+        const blob = new Blob(parts, {
+            type: "video/webm",
+        });
 
-                url = URL.createObjectURL(blob);
-                link = document.createElement("a");
-                link.href = url;
-                link.download = fileName;
-                link.click();
-            };
-        }
-    }
+        date = new Date();
+        fileName =
+            "RECORDING_" +
+            date.getFullYear() +
+            "-" +
+            (date.getMonth() + 1) +
+            "-" +
+            date.getDate() +
+            "_" +
+            date.getHours() +
+            "-" +
+            date.getMinutes() +
+            "-" +
+            date.getSeconds() +
+            ".webm";
+
+        url = URL.createObjectURL(blob);
+        link = document.createElement("a");
+        link.href = url;
+        link.download = fileName;
+        link.click();
+    };
 }
