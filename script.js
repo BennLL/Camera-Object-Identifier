@@ -10,7 +10,7 @@ let alertStatus = false;
 // change the time to change the fps of the camera
 let frame = 100;
 // change the time to change the interval of recording
-let recordTiming = 15000;
+let recordTiming = 10000;
 
 let ITEMS = [];
 
@@ -136,8 +136,10 @@ function recordLoop() {
     if (alertStatus == true) {
         if (hashuman()) {
             record();
+        }else{
+            setTimeout(recordLoop, 1000);
         }
-        setTimeout(recordLoop, recordTiming);
+        
     }
 }
 
