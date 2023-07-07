@@ -4,13 +4,8 @@ body {
     background-color: black;
 }
 
-.button {
+.button{
     position: relative;
-}
-
-.button-clicked {
-    background-color: blue;
-    color: white;
 }
 
 .button>button {
@@ -18,4 +13,9 @@ body {
     width: 200px;
     height: 100px;
     font-size: 40px;
+    cursor: pointer;
+}
+
+button:hover{
+    background-color: red;
 }

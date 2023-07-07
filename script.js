@@ -28,11 +28,6 @@ function main() {
 
     let promise = navigator.mediaDevices.getUserMedia({
         video: true,
-        // to configure aspect ratio
-        // video:{
-        //     width:{exact: 200},
-        //     height:{exact: 200},
-        // }
     });
     promise
         .then(function (signal) {
@@ -96,14 +91,12 @@ function loadResult(error, results) {
     }
     CONTEXT.clearRect(0, 0, CANVAS.width, CANVAS.height);
     ITEMS = results;
-    // console.log(ITEMS);
     drawBox();
     detectObjects();
 }
 
 function drawBox() {
     CONTEXT.clearRect(0, 0, CANVAS.width, CANVAS.height);
-    // console.log("Canvas Dimensions: ", CANVAS.width, CANVAS.height);
     CONTEXT.drawImage(VIDEO, SIZE.x, SIZE.y, SIZE.width, SIZE.height);
 
     for (i = 0; i < ITEMS.length; i++) {
@@ -113,7 +106,6 @@ function drawBox() {
             CONTEXT.lineWidth = 4;
 
             CONTEXT.beginPath();
-            // CONTEXT.rect(X, Y, W, H);
             CONTEXT.rect(item.x, item.y, item.width, item.height);
             CONTEXT.stroke();
 
