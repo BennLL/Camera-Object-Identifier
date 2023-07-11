@@ -128,10 +128,10 @@ function recordLoop() {
     if (alertStatus == true) {
         if (hashuman()) {
             record();
-        }else{
+        } else {
             setTimeout(recordLoop, 1000);
         }
-        
+
     }
 }
 
