@@ -5,15 +5,18 @@ const { google } = require('googleapis');
 const chokidar = require('chokidar');
 const mime = require('mime-types');
 const nodemailer = require('nodemailer');
+require('dotenv').config();
 
 //google api
 const credentials = {
-    client_id: '',
-    client_secret: '',
-    redirect_uris: [''],
+    client_id: process.env.GOOGLE_CLIENT_ID,
+    client_secret: process.env.GOOGLE_CLIENT_SECRET,
+    redirect_uris: [process.env.GOOGLE_REDIRECT_URIS],
 };
 
-const refresh_token = ''
+
+const refresh_token = ""; // add your refresh_token
+
 
 const oauth2Client = new google.auth.OAuth2(
     credentials.client_id,
@@ -32,8 +35,8 @@ const drive = google.drive({
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: '',
-        pass: '',
+        user: process.env.GMAIL_USERNAME,
+        pass: process.env.GMAIL_APP_PASSWORD,
     }
 });
 
@@ -56,8 +59,8 @@ async function uploadFile(filePath) {
 
         // alert by sending email
         const mailOptions = {
-            from: '',
-            to: '',
+            from: process.env.GMAIL_USERNAME,
+            to: process.env.GMAIL_USERNAME,
             subject: 'New Recording ' + fileName,
             text: 'Your camera has a new alert please check it.',
         }
