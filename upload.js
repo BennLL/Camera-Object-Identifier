@@ -1,7 +1,9 @@
 const path = require('path');
 const fs = require('fs');
+const os = require('os');
 const { google } = require('googleapis');
-
+const chokidar = require('chokidar');
+const mime = require('mime-types');
 
 //google api
 const credentials = {
@@ -25,17 +27,18 @@ const drive = google.drive({
     auth: oauth2Client,
 })
 
-const filePath = path.join(__dirname, 'test.JPG')
-
-async function uploadFile() {
+async function uploadFile(filePath) {
+    parts = filePath.split('\\')
+    fileName = parts.pop();
     try {
+        const mimeType = mime.lookup(filePath)
         const response = await drive.files.create({
             requestBody: {
-                name: "test.jpg",
-                mimeType: 'image/jpeg'
+                name: fileName,
+                mimeType,
             },
             media: {
-                mimeType: 'image/jpeg',
+                mimeType,
                 body: fs.createReadStream(filePath),
             }
         });
@@ -45,4 +48,17 @@ async function uploadFile() {
     }
 }
 
-uploadFile()
+const downloadFolder = path.join(os.homedir(), "Downloads");
+
+const watcher = chokidar.watch(downloadFolder,{
+    ignored: /(^|[\/\\])\../,
+    persistent: true,
+    awaitWriteFinish:{
+        stabilityThreshold: 2000,
+        pollInterval: 100,
+    }
+});
+
+watcher.on('add', (filePath) => {
+    uploadFile(filePath)
+});
