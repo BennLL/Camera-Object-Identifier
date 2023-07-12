@@ -2,6 +2,7 @@
   "dependencies": {
     "chokidar": "^3.5.3",
     "googleapis": "^121.0.0",
-    "mime-types": "^2.1.35"
+    "mime-types": "^2.1.35",
+    "nodemailer": "^6.9.3"
   }
 }

@@ -4,6 +4,7 @@ const os = require('os');
 const { google } = require('googleapis');
 const chokidar = require('chokidar');
 const mime = require('mime-types');
+const nodemailer = require('nodemailer');
 
 //google api
 const credentials = {
@@ -27,6 +28,15 @@ const drive = google.drive({
     auth: oauth2Client,
 })
 
+//nodemailer.js
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: '',
+        pass: '',
+    }
+});
+
 async function uploadFile(filePath) {
     parts = filePath.split('\\')
     fileName = parts.pop();
@@ -43,6 +53,22 @@ async function uploadFile(filePath) {
             }
         });
         console.log(response.data);
+
+        // alert by sending email
+        const mailOptions = {
+            from: '',
+            to: '',
+            subject: 'New Recording ' + fileName,
+            text: 'Your camera has a new alert please check it.',
+        }
+
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.log(error);
+            } else {
+                console.log('Email sent:', info.response)
+            }
+        });
     } catch (error) {
         console.log(error.message)
     }
@@ -50,10 +76,10 @@ async function uploadFile(filePath) {
 
 const downloadFolder = path.join(os.homedir(), "Downloads");
 
-const watcher = chokidar.watch(downloadFolder,{
+const watcher = chokidar.watch(downloadFolder, {
     ignored: /(^|[\/\\])\../,
     persistent: true,
-    awaitWriteFinish:{
+    awaitWriteFinish: {
         stabilityThreshold: 2000,
         pollInterval: 100,
     }
