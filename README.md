@@ -20,7 +20,7 @@ Made with
 </ul>
 
 <h3>Showcase with my cat</h3>
-![GIF](https://imgur.com/HOU60V4.gif)
+![cat demo](https://github.com/BennLL/Camera-Object-Identifier/assets/110274203/b2ed2baa-3cc3-4d3b-ab21-2bf8a003bb33)
 
 <h3>Functionality</h3>
 
