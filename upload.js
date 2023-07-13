@@ -8,15 +8,14 @@ const nodemailer = require('nodemailer');
 require('dotenv').config();
 
 //google api
+//add your google client ID, Secret, and redirect URI
 const credentials = {
     client_id: process.env.GOOGLE_CLIENT_ID,
     client_secret: process.env.GOOGLE_CLIENT_SECRET,
     redirect_uris: [process.env.GOOGLE_REDIRECT_URIS],
 };
 
-
 const refresh_token = ""; // add your refresh_token
-
 
 const oauth2Client = new google.auth.OAuth2(
     credentials.client_id,
@@ -32,6 +31,7 @@ const drive = google.drive({
 })
 
 //nodemailer.js
+//Use your own gmail and make an app password
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
