@@ -19,8 +19,9 @@ Made with
     <li>Overall, the project provides a cost-effective solution to repurpose existing hardware and leverage computer vision capabilities for basic security monitoring.</li>
 </ul>
 
-<h3>Showcase with my cat</h3>
-![cat demo](https://github.com/BennLL/Camera-Object-Identifier/assets/110274203/b2ed2baa-3cc3-4d3b-ab21-2bf8a003bb33)
+![Showcase with my cat](https://img.shields.io/badge/-Showcase%20with%20my%20cat-gray?style=flat)
+<br>
+![cat demo](https://github.com/BennLL/Camera-Object-Identifier/assets/110274203/33460190-a663-4d18-838c-c3d2365e7647)
 
 <h3>Functionality</h3>
 
